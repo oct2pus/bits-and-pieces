@@ -55,9 +55,9 @@ func (b Brace) Extrude() sdf.SDF3 {
 		parts = append(parts, sdf.Extrude3D(b.faces[x], b.heights[x]))
 	}
 	// handle front
-	parts[0] = sdf.Transform3D(parts[0], sdf.Translate3d(sdf.V3{X: 0, Y: -b.faces[0].BoundingBox().Max.Y, Z: b.faces[0].BoundingBox().Max.X - 0.2}))
+	parts[0] = sdf.Transform3D(parts[0], sdf.Translate3d(sdf.V3{X: 0, Y: -b.faces[0].BoundingBox().Max.Y + 4, Z: b.faces[0].BoundingBox().Max.X - 0.2}))
 	// handle back
-	parts[1] = sdf.Transform3D(parts[1], sdf.Translate3d(sdf.V3{X: 0, Y: b.faces[2].BoundingBox().Max.Y, Z: b.faces[1].BoundingBox().Max.Y}))
+	parts[1] = sdf.Transform3D(parts[1], sdf.Translate3d(sdf.V3{X: 0, Y: b.faces[2].BoundingBox().Max.Y - 4, Z: b.faces[1].BoundingBox().Max.Y}))
 
 	return sdf.Union3D(parts[0], parts[1], parts[2])
 }
@@ -124,7 +124,7 @@ func main() {
 	brace, err := newBrace(
 		[]sdf.V2{{X: 0, Y: 0}, {X: 15, Y: 0}, {X: 15, Y: 4}, {X: 0, Y: 4}},
 		[]sdf.V2{{X: 0, Y: 0}, {X: 15, Y: 0}, {X: 15, Y: 4}, {X: 0, Y: 4}},
-		[]sdf.V2{{X: 0, Y: 0}, {X: 15, Y: 0}, {X: 15, Y: 23}, {X: 0, Y: 23}},
+		[]sdf.V2{{X: 0, Y: 0}, {X: 15, Y: 0}, {X: 15, Y: 23.2}, {X: 0, Y: 23.2}},
 		33.5,
 		12,
 		4)
@@ -133,7 +133,7 @@ func main() {
 	}
 	facet, err := newFacet(
 		3.8,
-		[]sdf.V2{{X: 0, Y: 0}, {X: 4.3, Y: 0}, {X: 4.3, Y: 13.5}, {X: 0, Y: 13.5}},
+		[]sdf.V2{{X: 0, Y: 0}, {X: 4.3, Y: 0}, {X: 4.3, Y: 8.5}, {X: 0, Y: 8.5}},
 		5)
 	if err != nil {
 		log.Fatalf("error: %v\n", err)
@@ -144,25 +144,6 @@ func main() {
 
 func combine(b, f sdf.SDF3) sdf.SDF3 {
 	f = sdf.Transform3D(f, sdf.Rotate3d(sdf.V3{X: 1, Y: 0, Z: 0}, sdf.DtoR(270)))
-	f = sdf.Transform3D(f, sdf.Translate3d(sdf.V3{X: b.BoundingBox().Max.X / 2, Y: -f.BoundingBox().Max.Y * 2.625, Z: b.BoundingBox().Max.Z * 0.75}))
+	f = sdf.Transform3D(f, sdf.Translate3d(sdf.V3{X: b.BoundingBox().Max.X / 2, Y: -f.BoundingBox().Max.Y * 1, Z: b.BoundingBox().Max.Z * 0.85}))
 	return sdf.Union3D(b, f)
 }
-
-/*func brace() {
-	// X: 15, Y: 33.5, Z: 4
-	frontDimensions := []sdf.V2{{X: 0, Y: 0}, {X: 15, Y: 0}, {X: 15, Y: 4}, {X: 0, Y: 4}}
-	// X: 15, Y: 12, Z: 4
-	backDimensions := []sdf.V2{{X: 0, Y: 0}, {X: 15, Y: 0}, {X: 15, Y: 4}, {X: 0, Y: 4}}
-	// X: 15, Y: 4, Z: 23
-	topDimensions := []sdf.V2{{X: 0, Y: 0}, {X: 15, Y: 0}, {X: 15, Y: 23}, {X: 0, Y: 23}}
-	faces := make([]sdf.Polygon, 3)
-	faces = append(faces, *sdf.NewPolygon())
-	faces = append(faces, *sdf.NewPolygon())
-	faces = append(faces, *sdf.NewPolygon())
-	faces[0].AddV2Set(frontDimensions)
-	faces[1].AddV2Set(backDimensions)
-	faces[2].AddV2Set(topDimensions)
-
-	front_ex := sdf.Extrude3D(, 33.5)
-
-}*/
