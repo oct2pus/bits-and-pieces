@@ -1,0 +1,6 @@
+13 mm - ridge height
+10 mm - ridge length
+7 mm - remote depth
+22.4 mm - remote length
+
+lets use 0.6 mm for size of outline
