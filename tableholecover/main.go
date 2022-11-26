@@ -40,21 +40,22 @@ func inside(x, y, z, thickness float64) sdf.SDF3 {
 
 // bundle of wires is 2.0 mm approximately, do 2 as radius for 4mm length circle?
 func cap(x, y, z, offset, radius float64) sdf.SDF3 {
+	expansion := 2.0
 	underside, err := sdf.Box3D(sdf.V3{X: x + offset, Y: y + offset, Z: z + 2}, 3)
 	if err != nil {
 		log.Fatalf("error: %v\n", err)
 	}
 	underside = sdf.Transform3D(underside, sdf.Translate3d(sdf.V3{X: 0, Y: 0, Z: -1}))
-	topside, err := sdf.Box3D(sdf.V3{X: x + offset + 1, Y: y + offset + 1, Z: z + 3}, 3)
+	topside, err := sdf.Box3D(sdf.V3{X: x + offset + expansion, Y: y + offset + expansion, Z: z + 3}, 3)
 	if err != nil {
 		log.Fatalf("error: %v\n", err)
 	}
 
-	bottom, err := sdf.Box3D(sdf.V3{X: x + offset + 1, Y: y + offset + 1, Z: z/2 + 1}, 0)
+	bottom, err := sdf.Box3D(sdf.V3{X: x + offset + expansion + 0.4, Y: y + offset + expansion + 0.4, Z: z}, 0)
 	if err != nil {
 		log.Fatalf("error: %v\n", err)
 	}
-	bottom = sdf.Transform3D(bottom, sdf.Translate3d(sdf.V3{X: 0, Y: 0, Z: -z / 3}))
+	bottom = sdf.Transform3D(bottom, sdf.Translate3d(sdf.V3{X: 0, Y: 0, Z: -z / 2}))
 
 	cableHole2D, err := sdf.Circle2D(radius)
 	if err != nil {
@@ -105,7 +106,7 @@ func main() {
 	liner = sdf.Transform3D(liner, sdf.Rotate3d(sdf.V3{X: 0, Y: 1, Z: 0}, sdf.DtoR(180)))
 	cover = sdf.Transform3D(cover, sdf.Rotate3d(sdf.V3{X: 0, Y: 1, Z: 0}, sdf.DtoR(180)))
 
-	render.ToSTL(liner, 300, "liner.stl", &render.MarchingCubesUniform{})
-	render.ToSTL(cover, 300, "cover.stl", &render.MarchingCubesUniform{})
+	render.ToSTL(liner, 1200, "liner.stl", &render.MarchingCubesUniform{})
+	render.ToSTL(cover, 1200, "cover.stl", &render.MarchingCubesUniform{})
 	//	render.ToSTL(inline, 300, "inline.stl", &render.MarchingCubesUniform{})
 }

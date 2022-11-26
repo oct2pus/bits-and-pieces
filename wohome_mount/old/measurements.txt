@@ -1,0 +1,15 @@
+circle:
+7.6mm width/height (radius 3.8mm)
+line:
+4.3mm width
+13.5mm length
+holder:
+18mm width*
+
+unrelated to measurement
+
+wohome height:
+67mm (use half probably for mounting hole location)
+
+wood width:
+15mm
